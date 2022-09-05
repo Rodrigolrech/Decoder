@@ -62,7 +62,7 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(userModel);
 
     }
-    @PutMapping("/userId")
+    @PutMapping("/userId/password")
     public ResponseEntity<Object> updateUserPassword(@PathVariable(value = "userId") UUID userId,
                                                      @RequestBody @JsonView(UserDto.UserView.PasswordPut.class) UserDto userDto) {
         Optional<UserModel> userModelOptional = userService.findById(userId);
@@ -78,6 +78,7 @@ public class UserController {
         userService.save(userModel);
         return ResponseEntity.status(HttpStatus.OK).body("Password updated successfully.");
     }
+
 
 
 }
