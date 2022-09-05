@@ -62,6 +62,22 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(userModel);
 
     }
+    @PutMapping("/userId")
+    public ResponseEntity<Object> updateUserPassword(@PathVariable(value = "userId") UUID userId,
+                                                     @RequestBody @JsonView(UserDto.UserView.PasswordPut.class) UserDto userDto) {
+        Optional<UserModel> userModelOptional = userService.findById(userId);
+        if (!userModelOptional.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+        }
+        if (!userModelOptional.get().getPassword().equals(userDto.getOldPassword())) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Error: Mismatched old password!");
+        }
+        UserModel userModel = userModelOptional.get();
+        userModel.setPassword(userDto.getPassword());
+        userModel.setLastUpdateDate(LocalDateTime.now(ZoneId.of("UTC")));
+        userService.save(userModel);
+        return ResponseEntity.status(HttpStatus.OK).body("Password updated successfully.");
+    }
 
 
 }
