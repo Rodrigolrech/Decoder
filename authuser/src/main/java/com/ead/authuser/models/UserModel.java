@@ -30,9 +30,6 @@ public class UserModel implements Serializable {
     @JsonIgnore
     @Column(nullable = false, length = 255)
     private String password;
-    @JsonIgnore
-    @Column(nullable = false, length = 255)
-    private String oldPassword;
     @Column(nullable = false, length = 150)
     private String fullName;
     @Column(nullable = false)
