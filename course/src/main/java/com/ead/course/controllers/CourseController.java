@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -57,5 +58,10 @@ public class CourseController {
         courseModel.setCourseLevel(courseDto.getCourseLevel());
         courseModel.setLastUpdateDate(LocalDateTime.now(ZoneId.of("UTC")));
         return ResponseEntity.status(HttpStatus.OK).body(courseService.save(courseModel));
+    }
+
+    @GetMapping
+    public ResponseEntity<List<CourseModel>> getAllCourses() {
+        return ResponseEntity.status(HttpStatus.OK).body(courseService.findAll());
     }
 }
