@@ -69,8 +69,8 @@ public class ModuleController {
     }
 
     @GetMapping("/courses/{courseId}/modules")
-    public ResponseEntity<List<ModuleModel>> getAllModules() {
-        return ResponseEntity.status(HttpStatus.OK).body(moduleService.findAll());
+    public ResponseEntity<List<ModuleModel>> getAllModulesByCourse(@PathVariable(value = "courseId") UUID courseId) {
+        return ResponseEntity.status(HttpStatus.OK).body(moduleService.findAllByCourse(courseId));
     }
 
 }
