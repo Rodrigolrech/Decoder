@@ -61,4 +61,18 @@ public class LessonController {
         }
         return ResponseEntity.status(HttpStatus.OK).body(lessonService.findAllLessonsIntoModule(moduleId));
     }
+
+    @GetMapping("/modules/{moduleId}/lessons/{lessonId}")
+    public ResponseEntity<Object> getLessonIntoModule(@PathVariable(value = "moduleId") UUID moduleId,
+                                                      @PathVariable(value = "lessonId") UUID lessonId) {
+        Optional<ModuleModel> moduleModelOptional = moduleService.findById(moduleId);
+        if (!moduleModelOptional.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Module not found.");
+        }
+        Optional<LessonModel> lessonModelOptional = lessonService.findLessonIntoModule(moduleId, lessonId);
+        if(!lessonModelOptional.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Lesson not found for this module.");
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(lessonModelOptional.get());
+    }
 }
