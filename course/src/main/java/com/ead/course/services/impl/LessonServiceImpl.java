@@ -32,6 +32,6 @@ public class LessonServiceImpl implements LessonService {
 
     @Override
     public List<LessonModel> findAllLessonsIntoModule(UUID moduleId) {
-        return findAllLessonsIntoModule(moduleId);
+        return lessonRepository.findAllLessonsIntoModule(moduleId);
     }
 }
