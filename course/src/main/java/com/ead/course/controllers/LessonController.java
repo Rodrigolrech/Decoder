@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -50,5 +51,14 @@ public class LessonController {
         }
         lessonService.delete(lessonModelOptional.get());
         return ResponseEntity.status(HttpStatus.OK).body("Lesson deleted successfully.");
+    }
+
+    @GetMapping("/modules/{moduleId}/lessons")
+    public ResponseEntity<Object> getAllLessonsFromAModule(@PathVariable(value = "moduleId") UUID moduleId) {
+        Optional<ModuleModel> moduleModelOptional = moduleService.findById(moduleId);
+        if (!moduleModelOptional.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Module not found.");
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(lessonService.findAllLessonsIntoModule(moduleId));
     }
 }
