@@ -7,6 +7,7 @@ import net.kaczmarzyk.spring.data.jpa.domain.Equal;
 import net.kaczmarzyk.spring.data.jpa.domain.Like;
 import net.kaczmarzyk.spring.data.jpa.web.annotation.And;
 import net.kaczmarzyk.spring.data.jpa.web.annotation.Spec;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.Expression;
@@ -15,6 +16,25 @@ import java.util.Collection;
 import java.util.UUID;
 
 public class SpecificationTemplate {
+    public static Specification<LessonModel> lessonModuleId(UUID moduleId) {
+        return (root, query, cb) -> {
+            // Para não ter resultados duplicados
+            query.distinct(true);
+            // Entidade A
+            Root<LessonModel> lesson = root;
+            // Entidade B
+            Root<ModuleModel> module = query.from(ModuleModel.class);
+            // Extrai a coleção da Entidade A na Entidade B | Extraindo todos os modulos de um determinado curso
+            Expression<Collection<LessonModel>> modulesLessons = module.get("lessons");
+            // Constroi a Query
+            return cb
+                    // Filtra da Entidade B todos os cursos com o id courseId
+                    .and(cb.equal(module.get("moduleId"), moduleId),
+                            // Subselect, faz verificação pra saber quais os modulos estao dentro dessa coleção que esta dentro deste curso.
+                            cb.isMember(lesson, modulesLessons));
+        };
+    }
+
     // Cria os filtros da pesquisa em paginação, por course level, course status e name, Sendo Equal para exatamente igual e Like para aproximado
     @And({
             @Spec(path = "courseLevel", spec = Equal.class),
